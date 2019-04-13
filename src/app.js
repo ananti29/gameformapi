@@ -25,7 +25,7 @@ app.use(expressWinston.logger({
 
 // set api to use cors for all
 app.use(cors({
-    origin: 'https://gameform-client-test.herokuapp.com/'
+    origin: 'https://gameform-client-test.herokuapp.com/*'
 }));
 
 // set api to use JSON
