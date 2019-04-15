@@ -46,19 +46,29 @@ app.get('/games', (req, res, next) => {
 // POST one game
 app.post('/add_game', (req, res, next) => {
     let db = req.db;
+    let platformvalue = req.body.platform;
     const game = new GameModel({ gamename: req.body.gamename, platform: req.body.platform, notes: req.body.notes });
-    game.save(function (err, game) {
-        if (err) { return next(err); }
-        res.json(game);
-    });
+    if (platformvalue === 'Xbox' || 'Playstation' || 'PC') {
+        game.save(function (err, game) {
+            if (err) { return next(err); }
+            res.json(game);
+        });
+    } else {
+        return next('platform value has to be Xbox, Playstation or PC');
+    }
 });
 
 app.put('/games/:id', (req, res, next) => {
     let db = req.db;
-    GameModel.findOneAndUpdate({ _id: req.params.id }, { gamename: req.body.gamename, platform: req.body.platform, notes: req.body.notes }, { new: true }, function (err, game) {
-        if (err) { return next(err); }
-        res.json(game);
-    });
+    let platformvalue = req.body.platform;
+    if (platformvalue === 'Xbox' || 'Playstation' || 'PC') {
+        GameModel.findOneAndUpdate({ _id: req.params.id }, { gamename: req.body.gamename, platform: req.body.platform, notes: req.body.notes }, { new: true, runValidators: true }, function (err, game) {
+            if (err) { return next(err); }
+            res.json(game);
+        });
+    } else {
+        return next('platform value has to be Xbox, Playstation or PC');
+    }
 });
 
 // DELETE specific game
